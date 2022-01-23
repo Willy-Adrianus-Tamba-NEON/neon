@@ -95,27 +95,20 @@ class ControllerWilly(object):
 
 
     @classmethod
-    def edit_user_by_loanid(cls, loanid=None, input_data=None):
-        input_data = RequestEditUser(**input_data)
+    def edit_user_by_loanid(cls, loanid=None, update_data=None):
         result = BaseResponse()
         result.status = 400
 
         try:
-            if loanid is not None:
-                if loanid in Loan.lists("loanid"):
-                    Loan.where('loanid', loanid).update(input_data)
-                    data = Loan.where('loanid', loanid).get().serialize()
-                    result.status = 200
-                    result.message = f"Updated user for: {loanid}"
-                    result.data = ResponseMyLoan(**{'user_list': data})
-                    Log.info(result.message)
-                else:
-                    result.status = 404
-                    result.message = "loanid not found"
-            else:
-                result.status = 400
-                result.message = "none input"
+            if loanid is not None and loanid in Loan.lists("loanid"):
+                Loan.where('loanid', loanid).update(update_data)
+                result.status = 200
+                result.message = f"Updated user with loanid: {loanid}"
                 Log.info(result.message)
+                
+            else:
+                result.status = 404
+                result.message = "loan id not found"
         except:
             m = "Error"
             Log.error(m)
@@ -123,33 +116,3 @@ class ControllerWilly(object):
             result.message = str(m)
 
         return result
-
-#  @classmethod
-#     def update_demography_data(cls, id_no=None, update_data=None):
-#         update_data = RequestUpdateData(**update_data)
-#         result = BaseResponse()
-#         result.status = 400
-
-#         try:
-#             if id_no is not None:
-#                 if id_no in Loan.lists("idno"):
-#                     Loan.where('idno', id_no).update(update_data)
-#                     data = Loan.where('idno', id_no).get().serialize()
-#                     result.status = 200
-#                     result.message = f"Update phone number by id no: {id_no}"
-#                     result.data = ResponseLoanStatus(**{'status_list': data})
-#                     Log.info(result.message)
-#                 else:
-#                     result.status = 404
-#                     result.message = "idno not found"
-#             else:
-#                 result.status = 400
-#                 result.message = "There's no input"
-#                 Log.info(result.message)
-#         except:
-#             m = "Error"
-#             Log.error(m)
-#             result.status = 400
-#             result.message = str(m)
-
-#         return result

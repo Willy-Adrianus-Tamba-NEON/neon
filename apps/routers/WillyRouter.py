@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 import json
 from unittest import result
 from fastapi import APIRouter, Body, Response
@@ -15,25 +16,25 @@ async def get_risky_user(response: Response, risky:int = 0):
 
 input_insert_data = json.dumps({
     "loanid": "",
-    "loan_type": "",
-    "loan_status": "",
-    "loan_amount": "",
-    "loan_tenure": "",
-    "interest": "",
+    "loan_type": None,
+    "loan_status": None,
+    "loan_amount": None,
+    "loan_tenure": None,
+    "interest": None,
     "cif": "",
     "idno": "",
     "fname": "",
     "lname": "",
-    "dob": "",
+    "dob": None,
     "gender": "",
     "marital_status": "",
-    "income": "",
+    "income": None,
     "phone": "",
     "email": "",
-    "isphoneverified": "",
-    "isemailverified": "",
-    "createdate": "",
-    "updatedate": "",
+    "isphoneverified": None,
+    "isemailverified": None,
+    "createdate": None,
+    "updatedate": None,
     "source": "",
 }, indent=2)
 @router.post("/insert_user")
@@ -50,27 +51,11 @@ edit_user_example= json.dumps({
 })
 @router.put("/edit_user")
 async def edit_user_by_loanid(response: Response, loanid: str, input_data=Body(..., example=edit_user_example)):
-    result = loan.edit_user_by_loanid(loanid=loanid, input_data=input_data)
+    result = loan.edit_user_by_loanid(loanid=loanid, update_data=input_data)
     return result
+
 
 @router.delete("/delete_user")
 async def delete_user_by_loanid(response: Response, loanid=None):
     result = loan.delete_user_by_loanid(loanid=loanid)
     return result
-
-
-# update_data= json.dumps({
-#     "fname": 'Rendi',
-#     "lname": 'Salim',
-#     "dob": "24/05/1998",
-#     "gender": "Male",
-#     "marital_status": "Single",
-#     "income": "150000000",
-#     "phone": "111-111-111",
-#     "email": 'r.salim@gmail.com'
-# })
-
-# @router.put('/update_borrower_data')
-# async def update_demography_data(response: Response, id_no:str, input_data = Body(..., example=update_data)):
-#     result = Rendi.update_demography_data(id_no = id_no, update_data = input_data)
-#     return result
